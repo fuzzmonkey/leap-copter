@@ -1,0 +1,12 @@
+{
+	"name": "leap-copter",
+	"version": "0.0.1",
+	"private": true,
+	"scripts": {
+		"start": "node go.js"
+	},
+	"dependencies": {
+		"ar-drone": "*",
+		"leapjs": "*"
+	}
+}
