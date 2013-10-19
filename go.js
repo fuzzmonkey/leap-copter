@@ -34,7 +34,6 @@ function handleRoll(hand) {
 	if (hand.roll() <= -0.5) {
 		console.log('right:' + hand.roll())
 		return 'right'
-		return;
 	} else if (hand.roll() >= 0.5) {
 		console.log('left:' + hand.roll())
 		return 'left';
