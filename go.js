@@ -41,20 +41,21 @@ function handleRoll(hand) {
 	}
 }
 
-function handleHeight(hand, previousPosition) {
+function handleHeight(hand) {
 	currentPosition = (parseInt(hand.stabilizedPalmPosition[1]/10)+1)*10
 	if (currentPosition < previousPosition) {
 		console.log('down: ' + currentPosition)
+		previousPosition = currentPosition;
 		return 'down';
 	} else if (currentPosition != previousPosition) {
 		console.log('up: ' + currentPosition)
+		previousPosition = currentPosition;
 		return 'up';
 	}
-	previousPosition = currentPosition;
 }
 
 function handleSpin(hand) {
-	if ( hand.fingers.length == 0) {
+	if ( hand.fingers.length == 0 ) {
 		if (hand.roll() <= -0.5) {
 			console.log('counterClockwise:' + hand.roll())
 			return 'counterClockwise';
@@ -66,13 +67,13 @@ function handleSpin(hand) {
 }
 
 function handleInput(hand) {
-	action = handleSpin(copterClient, hand)
+	action = handleSpin(hand)
 	if (action) return action
-	action = handleRoll(copterClient, hand)
+	action = handleRoll(hand)
 	if (action) return action
-	action = handlePitch(copterClient, hand)
+	action = handlePitch(hand)
 	if (action) return action
-	action = handleHeight(copterClient, hand, previousPosition)
+	action = handleHeight(hand)
 	return action;
 }
 
@@ -86,15 +87,16 @@ leapController.on('deviceFrame', function( frame ) {
 
 		if (!flying && hand.fingers.length == 5) {
 			flying = true;
+			console.log('take off')
 			copterClient.takeoff()
 		}
 		if (!flying) return;
 
-		action = handleInput(hand)
-
-		if (action)
+		action = handleInput(hand, previousPosition)
+		if (action != null) {
 			speed = actionSpeeds[action];
 			copterClient[action](speed);
+		}
 	} else {
 		copterClient.stop();
 	}
